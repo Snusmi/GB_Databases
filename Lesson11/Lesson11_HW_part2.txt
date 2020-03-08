@@ -1,0 +1,65 @@
+******
+В базе данных Redis подберите коллекцию для подсчета посещений с определенных IP-адресов.
+
+Решение: Сортированные множества (ZSETs)
+******
+
+127.0.0.1:6379> zadd ips 8 ip1
+(integer) 1
+127.0.0.1:6379> zadd ips 10 ip2
+(integer) 1
+127.0.0.1:6379> zadd ips 150 ip3
+(integer) 1
+127.0.0.1:6379> zrange ips 0 2
+1) "ip1"
+2) "ip2"
+3) "ip3"
+127.0.0.1:6379> zincrby ips 3 ip1
+"11"
+127.0.0.1:6379> zrange ips 0 2
+1) "ip2"
+2) "ip1"
+3) "ip3"
+127.0.0.1:6379>
+
+*******
+При помощи базы данных Redis решите задачу поиска имени пользователя по электронному адресу и наоборот, поиск электронного адреса пользователя по его имени.
+
+Решение: Хэши
+*******
+
+127.0.0.1:6379> hmset users andrey@email.com andrey peter@email.com peter
+OK
+127.0.0.1:6379> hgetall users
+1) "andrey@email.com"
+2) "andrey"
+3) "peter@email.com"
+4) "peter"
+127.0.0.1:6379> hscan users 0 MATCH andrey*
+1) "0"
+2) 1) "andrey@email.com"
+   2) "andrey"
+127.0.0.1:6379>
+
+
+*********
+Организуйте хранение категорий и товарных позиций учебной базы данных shop в СУБД MongoDB.
+*********
+
+> db.shop.catalogs.insert({id: 1, name: 'Processors'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.catalogs.insert({id: 2, name: 'Motherboard'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.catalogs.insert({id: 3, name: 'Video card'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.catalogs.find()
+{ "_id" : ObjectId("5e62be24ea97e3446904d80a"), "id" : 1, "name" : "Processors" }
+{ "_id" : ObjectId("5e62be5fea97e3446904d80b"), "id" : 2, "name" : "Motherboard" }
+{ "_id" : ObjectId("5e62be87ea97e3446904d80c"), "id" : 3, "name" : "Video card" }
+
+> db.shop.products.insert({id: 1, name: 'Intel Core i3-8100', description: 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', price: 7890.00, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.shop.products.insert({id: 2, name: 'Intel Core i5-7400', description: 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', price: 12700.00, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.shop.products.insert({id: 3, name: 'ASUS ROG MAXIMUS X HERO', description: 'Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX', price: 19310.00, catalog_id: 2})
+WriteResult({ "nInserted" : 1 })
